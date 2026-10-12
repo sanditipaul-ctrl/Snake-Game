@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Snake Game</title>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script>
+
+    <style>
+        body {
+            background: linear-gradient(-45deg, #00f2fe, #fbc2eb);
+            background-attachment: fixed;
+            text-align: center;
+        }
+
+        h1 {
+            color: #002a69;
+        }
+
+        canvas {
+            border: 3px dashed rgb(0, 0, 158);
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Snake Game</h1>
+    <hr style="width: 40%;">
+
+    <script>
+        let sx = 325;
+        let sy = 240;
+        let size = 20;
+
+        function setup() {
+            createCanvas(650, 480);
+        }
+
+        function draw() {
+            background("white");
+            drawSnake();
+        }
+
+        function drawSnake() {
+            stroke("green");
+            fill("green");
+            rect(sx, sy, size, size);
+        }
+    </script>
+</body>
+</html>

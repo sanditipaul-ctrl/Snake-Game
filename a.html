@@ -38,7 +38,12 @@
 
         let sx = 325;
         let sy = 240;
+
+        let dirX = 0;
+        let dirY = 0;
+
         let size = 20;
+        let gameStarted = false;
 
         function setup() {
             createCanvas(650, 480);
@@ -59,19 +64,50 @@
                 x = poses[0].pose.keypoints[0].position.x;
                 y = poses[0].pose.keypoints[0].position.y;
 
-                console.log("Nose position:", x, y);
+                if (!gameStarted) {
+                    gameStarted = true;
+                }
+
+                if (x > sx + 10) {
+                    dirX = 5;
+                    dirY = 0;
+                } else if (x < sx - 10) {
+                    dirX = -5;
+                    dirY = 0;
+                }
+
+                if (y > sy + 10) {
+                    dirX = 0;
+                    dirY = 5;
+                } else if (y < sy - 10) {
+                    dirX = 0;
+                    dirY = -5;
+                }
             }
         }
 
         function draw() {
             background("white");
-            drawSnake();
+
+            if (gameStarted) {
+                moveSnake();
+                drawSnake();
+            } else {
+                fill("black");
+                textSize(25);
+                text("Move your nose to start the game", 100, 240);
+            }
         }
 
         function drawSnake() {
             stroke("green");
             fill("green");
             rect(sx, sy, size, size);
+        }
+
+        function moveSnake() {
+            sx += dirX;
+            sy += dirY;
         }
     </script>
 </body>

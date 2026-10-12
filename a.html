@@ -39,10 +39,15 @@
         let sx = 325;
         let sy = 240;
 
+        let fx = 200;
+        let fy = 150;
+
         let dirX = 0;
         let dirY = 0;
 
+        let score = 0;
         let size = 20;
+
         let gameStarted = false;
 
         function setup() {
@@ -92,6 +97,12 @@
             if (gameStarted) {
                 moveSnake();
                 drawSnake();
+                drawFood();
+                drawScore();
+
+                if (check_collision()) {
+                    resetGame();
+                }
             } else {
                 fill("black");
                 textSize(25);
@@ -105,9 +116,57 @@
             rect(sx, sy, size, size);
         }
 
+        function drawFood() {
+            stroke("red");
+            fill("red");
+            ellipse(fx, fy, size);
+        }
+
+        function drawScore() {
+            fill("black");
+            noStroke();
+            textSize(25);
+            text("Score: " + score, 325, 25);
+        }
+
         function moveSnake() {
             sx += dirX;
             sy += dirY;
+
+            if (dist(sx, sy, fx, fy) < size) {
+                score += 10;
+                changeFoodPosition();
+            }
+        }
+
+        function changeFoodPosition() {
+            fx = floor(random(50, 600));
+            fy = floor(random(50, 440));
+        }
+
+        function check_collision() {
+            return (
+                sx <= 0 ||
+                sx >= 650 ||
+                sy <= 0 ||
+                sy >= 480
+            );
+        }
+
+        function resetGame() {
+            alert("Game over! Your score: " + score);
+
+            sx = 325;
+            sy = 240;
+
+            fx = 200;
+            fy = 150;
+
+            dirX = 0;
+            dirY = 0;
+
+            score = 0;
+            gameStarted = false;
         }
     </script>
 </body>

@@ -14,6 +14,7 @@
             background: linear-gradient(-45deg, #00f2fe, #fbc2eb);
             background-attachment: fixed;
             text-align: center;
+            font-family: Arial, sans-serif;
         }
 
         h1 {
@@ -22,13 +23,33 @@
 
         canvas {
             border: 3px dashed rgb(0, 0, 158);
+            margin-top: 10px;
+        }
+
+        button {
+            background-color: #002a69;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px;
+        }
+
+        button:hover {
+            background-color: #0056b3;
         }
     </style>
 </head>
 
 <body>
-    <h1>Snake Game</h1>
+    <h1>Snake Game 🐍</h1>
     <hr style="width: 40%;">
+
+    <p>Move your nose to control the snake!</p>
+
+    <button onclick="restartGame()">Restart Game</button>
 
     <script>
         let video;
@@ -49,6 +70,7 @@
         let size = 20;
 
         let gameStarted = false;
+        let gameOver = false;
 
         function setup() {
             createCanvas(650, 480);
@@ -65,7 +87,7 @@
         }
 
         function gotResult(poses) {
-            if (poses.length > 0) {
+            if (poses.length > 0 && !gameOver) {
                 x = poses[0].pose.keypoints[0].position.x;
                 y = poses[0].pose.keypoints[0].position.y;
 
@@ -94,19 +116,27 @@
         function draw() {
             background("white");
 
+            drawScore();
+
+            if (gameOver) {
+                drawGameOver();
+                return;
+            }
+
             if (gameStarted) {
                 moveSnake();
                 drawSnake();
                 drawFood();
-                drawScore();
 
                 if (check_collision()) {
-                    resetGame();
+                    endGame();
                 }
             } else {
                 fill("black");
+                noStroke();
                 textSize(25);
-                text("Move your nose to start the game", 100, 240);
+                textAlign(CENTER, CENTER);
+                text("Move your nose to start the game", 325, 240);
             }
         }
 
@@ -119,54 +149,74 @@
         function drawFood() {
             stroke("red");
             fill("red");
-            ellipse(fx, fy, size);
+            ellipse(fx, fy, size, size);
         }
 
         function drawScore() {
             fill("black");
             noStroke();
-            textSize(25);
-            text("Score: " + score, 325, 25);
+            textSize(22);
+            textAlign(LEFT, TOP);
+            text("Score: " + score, 10, 10);
         }
 
         function moveSnake() {
             sx += dirX;
             sy += dirY;
 
-            if (dist(sx, sy, fx, fy) < size) {
+            if (dist(sx + size / 2, sy + size / 2, fx, fy) < size) {
                 score += 10;
                 changeFoodPosition();
             }
         }
 
         function changeFoodPosition() {
-            fx = floor(random(50, 600));
-            fy = floor(random(50, 440));
+            fx = floor(random(20, 630));
+            fy = floor(random(20, 460));
         }
 
         function check_collision() {
             return (
-                sx <= 0 ||
-                sx >= 650 ||
-                sy <= 0 ||
-                sy >= 480
+                sx < 0 ||
+                sx + size > width ||
+                sy < 0 ||
+                sy + size > height
             );
         }
 
-        function resetGame() {
-            alert("Game over! Your score: " + score);
+        function endGame() {
+            gameOver = true;
+            gameStarted = false;
+        }
 
+        function drawGameOver() {
+            fill("red");
+            noStroke();
+            textAlign(CENTER, CENTER);
+            textSize(40);
+            text("GAME OVER", width / 2, height / 2 - 30);
+
+            fill("black");
+            textSize(22);
+            text("Final Score: " + score, width / 2, height / 2 + 20);
+
+            textSize(16);
+            text("Click Restart Game to play again", width / 2, height / 2 + 60);
+        }
+
+        function restartGame() {
             sx = 325;
             sy = 240;
 
-            fx = 200;
-            fy = 150;
+            score = 0;
 
             dirX = 0;
             dirY = 0;
 
-            score = 0;
             gameStarted = false;
+            gameOver = false;
+
+            changeFoodPosition();
         }
     </script>
 </body>
